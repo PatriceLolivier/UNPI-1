@@ -14,7 +14,9 @@ COPY . /usr/share/nginx/html/
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Configuration PHP-FPM simple pour nginx
-RUN echo "listen = 127.0.0.1:9000" > /usr/local/etc/php-fpm.d/www.conf \
+RUN echo "user = www-data" > /usr/local/etc/php-fpm.d/www.conf \
+    && echo "group = www-data" >> /usr/local/etc/php-fpm.d/www.conf \
+    && echo "listen = 127.0.0.1:9000" >> /usr/local/etc/php-fpm.d/www.conf \
     && echo "pm = dynamic" >> /usr/local/etc/php-fpm.d/www.conf \
     && echo "pm.max_children = 5" >> /usr/local/etc/php-fpm.d/www.conf \
     && echo "pm.start_servers = 2" >> /usr/local/etc/php-fpm.d/www.conf \
