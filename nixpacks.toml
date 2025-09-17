@@ -1,7 +1,6 @@
 # Configuration Nixpacks pour UNPI - utilise notre nginx.conf personnalisé
 
-[providers]
-php = "8.2"
+providers = ["php"]
 
 [phases.setup]
 nixPkgs = [
