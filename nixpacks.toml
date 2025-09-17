@@ -65,5 +65,3 @@ echo 'Démarrage de nginx...' && \
 nginx -g 'daemon off;'
 """
 
-[variables]
-PHP_VERSION = "8.2"
