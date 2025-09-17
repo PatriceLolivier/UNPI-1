@@ -1,10 +1,8 @@
 # Dockerfile simple pour UNPI - PHP + nginx
 FROM php:8.2-fpm-alpine
 
-# Installation de nginx et supervisor seulement
-RUN apk add --no-cache \
-    nginx \
-    supervisor
+# Installation de nginx seulement
+RUN apk add --no-cache nginx
 
 # Configuration du répertoire de travail
 WORKDIR /usr/share/nginx/html
@@ -23,28 +21,13 @@ RUN echo "listen = 127.0.0.1:9000" > /usr/local/etc/php-fpm.d/www.conf \
     && echo "pm.min_spare_servers = 1" >> /usr/local/etc/php-fpm.d/www.conf \
     && echo "pm.max_spare_servers = 3" >> /usr/local/etc/php-fpm.d/www.conf
 
-# Configuration Supervisor pour gérer nginx et PHP-FPM
-RUN mkdir -p /var/log/supervisor
-COPY <<EOF /etc/supervisor/conf.d/supervisord.conf
-[supervisord]
-nodaemon=true
-logfile=/var/log/supervisor/supervisord.log
-pidfile=/var/run/supervisord.pid
-
-[program:php-fpm]
-command=php-fpm -F
-autostart=true
-autorestart=true
-stderr_logfile=/var/log/supervisor/php-fpm.err.log
-stdout_logfile=/var/log/supervisor/php-fpm.out.log
-
-[program:nginx]
-command=nginx -g "daemon off;"
-autostart=true
-autorestart=true
-stderr_logfile=/var/log/supervisor/nginx.err.log
-stdout_logfile=/var/log/supervisor/nginx.out.log
-EOF
+# Script de démarrage simple
+RUN echo '#!/bin/sh' > /start.sh \
+    && echo 'echo "Démarrage de PHP-FPM..."' >> /start.sh \
+    && echo 'php-fpm -D' >> /start.sh \
+    && echo 'echo "Démarrage de nginx..."' >> /start.sh \
+    && echo 'nginx -g "daemon off;"' >> /start.sh \
+    && chmod +x /start.sh
 
 # Permissions simples
 RUN chown -R www-data:www-data /usr/share/nginx/html \
@@ -53,5 +36,5 @@ RUN chown -R www-data:www-data /usr/share/nginx/html \
 # Exposition du port
 EXPOSE 80
 
-# Commande de démarrage avec Supervisor
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Commande de démarrage simple
+CMD ["/start.sh"]
