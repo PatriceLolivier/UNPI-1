@@ -7,10 +7,10 @@ RUN apk add --no-cache \
     supervisor
 
 # Configuration du répertoire de travail
-WORKDIR /app
+WORKDIR /usr/share/nginx/html
 
 # Copie des fichiers de l'application
-COPY . /app/
+COPY . /usr/share/nginx/html/
 
 # Configuration nginx personnalisée
 COPY nginx.conf /etc/nginx/nginx.conf
@@ -47,8 +47,8 @@ stdout_logfile=/var/log/supervisor/nginx.out.log
 EOF
 
 # Permissions simples
-RUN chown -R www-data:www-data /app \
-    && chmod -R 755 /app
+RUN chown -R www-data:www-data /usr/share/nginx/html \
+    && chmod -R 755 /usr/share/nginx/html
 
 # Exposition du port
 EXPOSE 80
