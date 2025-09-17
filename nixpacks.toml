@@ -67,4 +67,3 @@ nginx -g 'daemon off;'
 
 [variables]
 PHP_VERSION = "8.2"
-NIXPACKS_METADATA = "php,nginx"
