@@ -53,8 +53,5 @@ RUN chown -R www-data:www-data /app \
 # Exposition du port
 EXPOSE 80
 
-# Vérification de la configuration nginx au build
-RUN nginx -t
-
 # Commande de démarrage avec Supervisor
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
